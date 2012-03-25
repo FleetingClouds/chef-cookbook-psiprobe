@@ -1,0 +1,6 @@
+This is my first attempt at a simple Chef cookbook, so please don't expect that it be 100% bulletproof.
+
+It is only tested on TomCat 6, only as installed by the default TomCat Cookbook, and only on Ubuntu 10.04.
+
+Comments and pulls are very much encouraged.
+
