@@ -16,11 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-#::Chef::Node::Attribute.send(:include, Opscode::OpenSSL::Password)
 #
-default[:psiprobe][:version] = "2.3.0"
+default[:psiprobe][:version] = "2.3.1"
 default[:psiprobe][:tomcat_home] = "/var/lib/tomcat6"
 default[:psiprobe][:mirror] = "http://psi-probe.googlecode.com/files"
-#default[:psiprobe][:mirror] = "http://openerpns.warehouseman.com/downloads"
 
