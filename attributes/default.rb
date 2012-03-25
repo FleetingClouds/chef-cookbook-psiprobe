@@ -21,6 +21,6 @@
 #
 default[:psiprobe][:version] = "2.3.0"
 default[:psiprobe][:tomcat_home] = "/var/lib/tomcat6"
-default[:psiprobe][:mirror] = "http://openerpns.warehouseman.com/downloads"
+default[:psiprobe][:mirror] = "http://psi-probe.googlecode.com/files"
 #default[:psiprobe][:mirror] = "http://openerpns.warehouseman.com/downloads"
 

@@ -42,7 +42,6 @@ $version=find(SUCCESS_FILE_PATH, SEARCH_KEY)
 remote_file "psi_probe_pkg" do
   path "#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip"
   source "#{node[:psiprobe][:mirror]}/probe-#{node[:psiprobe][:version]}.zip"
-#  source "http://psi-probe.googlecode.com/files/probe-#{node[:psiprobe][:version]}.zip"
   mode "0644"
   not_if do File.exist?("#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip")
   end
