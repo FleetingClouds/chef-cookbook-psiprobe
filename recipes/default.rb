@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include recipe "tomcat::server"
 
 def find(file_name, key)
 	if not File.exist?(file_name) then return "CAUTION : version file not found." end
