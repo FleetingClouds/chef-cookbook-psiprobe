@@ -16,8 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-# include recipe "tomcat::server"
+include recipe "tomcat::server"
 
 def find(file_name, key)
 	if not File.exist?(file_name) then return "CAUTION : version file not found." end
@@ -40,34 +39,34 @@ SEARCH_KEY='probe.version='
 $version=find(SUCCESS_FILE_PATH, SEARCH_KEY)
 
 remote_file "psi_probe_pkg" do
-  path "#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip"
-  source "#{node[:psiprobe][:mirror]}/probe-#{node[:psiprobe][:version]}.zip"
-  mode "0644"
-  not_if do File.exist?("#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip")
-  end
+	path "#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip"
+	source "#{node[:psiprobe][:mirror]}/probe-#{node[:psiprobe][:version]}.zip"
+	mode "0644"
+	not_if do File.exist?("#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip")
+	end
 end
 
 bash "unzip-psiprobe" do
-  code <<-EOH
-  cd #{node[:psiprobe][:tomcat_home]}/webapps
-  rm -f probe.war
-  rm -f Changelog.txt
-  unzip "#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip"
-  EOH
-  not_if do $version .eql? "#{node[:psiprobe][:version]}"
-  end
+	code <<-EOH
+	cd #{node[:psiprobe][:tomcat_home]}/webapps
+	rm -f probe.war
+	rm -f Changelog.txt
+	unzip "#{Chef::Config['file_cache_path']}/probe-#{node[:psiprobe][:version]}.zip"
+	EOH
+	not_if do $version .eql? "#{node[:psiprobe][:version]}"
+	end
 end
 
 ruby_block "how_did_it_go" do
-  block do
+	block do
 		if $version .eql? "#{node[:psiprobe][:version]}" 
 			puts "* Did nothing. Version " + $version + " seemed to be installed already. * "
 		end
 		if not File.exist?("#{node[:psiprobe][:tomcat_home]}") 
 			puts "* * * Could not install Psi Probe since TomCat is not installed! * * * "
 		end
-  end
-  action :create
+	end
+	action :create
 end
 
 
