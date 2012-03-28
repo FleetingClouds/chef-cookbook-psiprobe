@@ -2,20 +2,32 @@
 # Cookbook Name:: psiprobe
 # Recipe:: default
 #
-# Copyright 2012, FLEETING CLOUDS
+# License :  GNU GPL v2
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Copyright 2011, FLEETING CLOUDS
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# 
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+
+# Packages needed for the this cookbook
+%w{ libxml-xpath-perl }.each do |pkg|
+  package pkg do
+    action :install
+  end
+end
 
 def find(file_name, key)
 	if not File.exist?(file_name) then return "CAUTION : version file not found." end
@@ -30,6 +42,7 @@ def find(file_name, key)
 end
 
 TOMCAT_HOME="#{node[:psiprobe][:tomcat_home]}"
+TOMCAT_CONF="#{node[:psiprobe][:tomcat_conf]}"
 SUCCESS_FILE="version.properties"
 
 SUCCESS_FILE_PATH=TOMCAT_HOME + "/webapps/probe/WEB-INF/" + SUCCESS_FILE
@@ -54,6 +67,42 @@ bash "unzip-psiprobe" do
 	EOH
 	not_if do $version .eql? "#{node[:psiprobe][:version]}"
 	end
+end
+
+bash "add-manager" do
+	code <<-EOH
+#	echo "New manager uid : #{node[:psiprobe][:manager_uid]}"
+#	echo "New manager password : #{node[:psiprobe][:manager_pwd]}"
+#	echo "Will define a manager? #{node[:psiprobe][:define_manager]}"
+	if [  ".#{node[:psiprobe][:define_manager]}." == ".true."  ]; then
+
+		declare PATCH=""
+
+		declare ROLE_DEFINED=`cat #{node[:psiprobe][:tomcat_conf]}/tomcat-users.xml | xpath -q -e "//role[@rolename='manager']"`
+		declare ROL_DEFD=`echo ${ROLE_DEFINED} | grep -c "manager"`
+		echo Found  rolename='manager'  listed ${ROL_DEFD} times in tomcat-users.xml.
+		if [  ${ROL_DEFD} -lt 1  ]; then
+			PATCH="${PATCH}    <role rolename=\\"manager\\"/>\\n"
+			echo Will insert "<role rolename=\\"manager\\"/>\\n"
+		fi
+
+		declare USER_DEFINED=`cat #{node[:psiprobe][:tomcat_conf]}/tomcat-users.xml | xpath -q -e "//user[@username='#{node[:psiprobe][:manager_uid]}']/@roles"`
+		USR_DEFD=`echo ${USER_DEFINED} | grep -c "manager"`
+		echo Found  username='#{node[:psiprobe][:manager_uid]}'   listed ${USR_DEFD} times in tomcat-users.xml.
+		if [  ${USR_DEFD} -lt 1  ]; then
+			PATCH="${PATCH}    <user username=\\"#{node[:psiprobe][:manager_uid]}\\" password=\\"#{node[:psiprobe][:manager_pwd]}\\" roles=\\"manager\\"/>\\n"
+			echo Will insert "<user username=\\"#{node[:psiprobe][:manager_uid]}\\" password=\\"*******\\" roles=\\"manager\\"/>\\n"
+		fi
+		
+		cp #{node[:psiprobe][:tomcat_conf]}/tomcat-users.xml #{node[:psiprobe][:tomcat_conf]}/tomcat-users.xml.original
+
+		cat #{node[:psiprobe][:tomcat_conf]}/tomcat-users.xml.original | sed "s|</tomcat-users>|${PATCH}</tomcat-users>|" > #{node[:psiprobe][:tomcat_conf]}/tomcat-users.xml
+
+
+	else
+		echo "no"
+	fi
+	EOH
 end
 
 ruby_block "how_did_it_go" do
