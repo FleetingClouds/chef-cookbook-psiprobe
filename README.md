@@ -6,9 +6,9 @@ Obtains and installs the Psi Probe war file in TomCat.
 Preamble
 ========
 
-This is my first attempt at a simple Chef cookbook, so please don't expect some quirks.
+This is my first attempt at a simple Chef cookbook, so please expect some quirks.
 
-It is only tested on TomCat 6, only as installed by the default TomCat Cookbook, and only on Ubuntu 10.04.
+It is only tested on TomCat 6, only as installed by the default TomCat Cookbook, and only on Ubuntu 11.04.
 
 It uses more shell scripting than it should, where Ruby would probably be just as capable, if not more so.
 
