@@ -19,5 +19,10 @@
 #
 default[:psiprobe][:version] = "2.3.1"
 default[:psiprobe][:tomcat_home] = "/var/lib/tomcat6"
+default[:psiprobe][:tomcat_conf] = "/etc/tomcat6"
+default[:psiprobe][:define_manager] = "false"
+default[:psiprobe][:manager_uid] = "prober"
+default[:psiprobe][:manager_pwd] = "ps1pr0bING"
+
 default[:psiprobe][:mirror] = "http://psi-probe.googlecode.com/files"
 
