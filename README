@@ -3,6 +3,9 @@ Description
 
 Obtains and installs the Psi Probe war file in TomCat.
 
+Source code available here : https://github.com/FleetingClouds/chef-cookbook-psiprobe
+
+
 Preamble
 ========
 
@@ -13,7 +16,6 @@ It is only tested on TomCat 6, only as installed by the default TomCat Cookbook,
 It uses more shell scripting than it should, where Ruby would probably be just as capable, if not more so.
 
 Comments and pulls are encouraged, very much so, please.
-
 
 
 Requirements

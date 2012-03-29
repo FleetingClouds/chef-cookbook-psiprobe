@@ -1,6 +1,6 @@
 
 name             "psiprobe"
-version          "0.1.3"
+version          "0.1.4"
 
 description      "Installs Psi Probe from here http://code.google.com/p/psi-probe/"
 license          "GNU GPL v2"
